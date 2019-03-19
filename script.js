@@ -108,6 +108,7 @@
     var sudokuInputs = document.getElementsByTagName("input");
     var solution = null;
     const solve = document.getElementById("solve");
+    const clear = document.getElementById("clear");
 
     for (var i = 0; i < numberArray.length; i++) {
         if (numberArray[i] == "0") continue;
@@ -119,6 +120,17 @@
         getSolution(function(result) {
             solution = result;
         })
+    })
+
+
+    clear.addEventListener('click', function() {
+        const inputElements = document.getElementsByClassName('number-input');
+        for (var i = 0; i < inputElements.length; i++) {
+            if (inputElements[i].readOnly == true) {
+                continue;
+            }
+            inputElements[i].value = "";
+        }
     })
     
 })()
