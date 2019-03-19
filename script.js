@@ -6,6 +6,33 @@
         fn(solutionArray);
     }
 
+    function checkPlayerAnswers() {
+        const inputElements = document.getElementsByClassName('number-input');
+        let playerAnswers = []
+        for (var i = 0; i < inputElements.length; i++) {
+            if (inputElements[i].value != "") {
+                inputElements[i].readOnly = true
+                playerAnswers.push(inputElements[i])
+            }
+        }
+
+        getSolution(function(result) {
+            if (!result) {
+                document.getElementById('solvable').innerHTML = "Current sudoku is unsolvable"
+            } else {
+                document.getElementById('solvable').innerHTML = "Current sudoku is still good"
+            }
+            for (var i = 0; i < inputElements.length; i++) {
+                if (inputElements[i].readOnly == false) {
+                    inputElements[i].value = ""
+                }
+            }
+            for (item in playerAnswers) {
+                item.readOnly = false;
+            }
+        })
+    }
+
     function solutionInProgress() {
         return new Promise(resolve => {
             resolve(sudokuSpace(1, 1))
@@ -13,13 +40,12 @@
     }
 
     function sudokuSpace(row, column) {
-        let currentRow = row
-        let currentColumn = column;
+        let currentRow = 1
+        let currentColumn = 1;
         let currentSquare = 1;
         let nextRow, nextColumn;
         let answerArray = [];
         let numberThatDontWork = 0;
-        let noInfinteLoop = 0
         let possibleCellFound = false;
         while (true) {
             const sudokuCell = document.getElementsByClassName(`row-${currentRow} column-${currentColumn}`)[0];
@@ -85,8 +111,13 @@
                         currentRow = currentRow;
                         currentColumn = currentColumn - 1;
                     }
+
+                    // if no answer can be found
+                    if (currentColumn == 0) {
+                        return false
+                    }
                     const previousSudokuCell = document.getElementsByClassName(`row-${currentRow} column-${currentColumn}`)[0];
-                    noInfinteLoop++;
+
                     if (previousSudokuCell.readOnly == true) {
                         answerArray.pop();
                         continue;
@@ -98,7 +129,6 @@
                     break;
                 }
             }
-            noInfinteLoop++;
         }
     }
 
@@ -121,6 +151,8 @@
             solution = result;
         })
     })
+
+    check.addEventListener('click', checkPlayerAnswers)
 
 
     clear.addEventListener('click', function() {
