@@ -107,6 +107,7 @@
 
     var sudokuInputs = document.getElementsByTagName("input");
     var solution = null;
+    const solve = document.getElementById("solve");
 
     for (var i = 0; i < numberArray.length; i++) {
         if (numberArray[i] == "0") continue;
@@ -114,8 +115,10 @@
         sudokuInputs[i].readOnly = true;
     }
 
-    getSolution(function(result) {
-        solution = result;
+    solve.addEventListener('click', function() {
+        getSolution(function(result) {
+            solution = result;
+        })
     })
-
+    
 })()
