@@ -137,6 +137,12 @@
 
     var sudokuInputs = document.getElementsByTagName("input");
     var solution = null;
+    const solveWorker = new Worker('./solve-worker.js');
+
+    // if (window.Worker) {
+    // } else {
+    //     alert("Your browser doesn't support web workers");
+    // }
     const solve = document.getElementById("solve");
     const clear = document.getElementById("clear");
 
@@ -147,13 +153,18 @@
     }
 
     solve.addEventListener('click', function() {
-        getSolution(function(result) {
-            solution = result;
-        })
+        // getSolution(function(result) {
+        //     solution = result;
+        // })
+        solveWorker.postMessage('solve');
+        console.log('posted to worker')
     })
 
     check.addEventListener('click', checkPlayerAnswers)
 
+    solveWorker.onmessage = function(data) {
+        console.log("Data is:" + data);
+    }
 
     clear.addEventListener('click', function() {
         const inputElements = document.getElementsByClassName('number-input');
